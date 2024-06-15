@@ -1,0 +1,23 @@
+{
+  "name": "simhub-server",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": "please-use-yarn",
+    "yarn": ">=1.22.19"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.11.3",
+    "hono": "^4.4.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "prettier": "^3.3.2",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
+  }
+}
