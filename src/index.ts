@@ -1,13 +1,14 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { environment } from "./config";
 
 const app = new Hono();
+const port = environment.port || 8000;
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
-const port = 8000;
 console.log(`Server is running on port ${port}`);
 
 serve({
