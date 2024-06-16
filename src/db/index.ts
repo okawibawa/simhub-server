@@ -1,27 +1,30 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool, PoolClient, PoolConfig } from "pg";
+
+import pg from "pg";
 
 import { environment } from "../config";
 
 const initializeDatabaseInstance = () => {
   let db: ReturnType<typeof drizzle>;
 
-  const createPool = (): Pool => {
-    const poolConfig: PoolConfig = {
+  const createPool = (): pg.Pool => {
+    const poolConfig: pg.PoolConfig = {
       connectionString: environment.databaseUrl,
       max: 5,
       idleTimeoutMillis: 20000,
       connectionTimeoutMillis: 10000,
     };
 
-    const pool = new Pool(poolConfig);
+    const pool = new pg.Pool(poolConfig);
 
-    pool.connect((err: Error | undefined, client: PoolClient | undefined, release: () => void) => {
-      if (err) {
-        console.warn("Failed to initiate database connection: ", err.stack);
-        process.exit(1);
+    pool.connect(
+      (err: Error | undefined, client: pg.PoolClient | undefined, release: () => void) => {
+        if (err) {
+          console.warn("Failed to initiate database connection: ", err.stack);
+          process.exit(1);
+        }
       }
-    });
+    );
 
     return pool;
   };
