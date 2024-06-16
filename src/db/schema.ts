@@ -38,15 +38,15 @@ export const orders = pgTable("orders", {
     .notNull(),
 });
 
-// export const orderItems = pgTable("order_items", {
-//   orderId: integer("order_id")
-//     .references(() => orders.id, { onDelete: "cascade" })
-//     .notNull(),
-//   esimId: integer("esim_id")
-//     .references(() => esims.id, { onDelete: "cascade" })
-//     .notNull(),
-//   quantity: smallint("quantity").notNull(),
-// });
+export const orderItems = pgTable("order_items", {
+  orderId: integer("order_id")
+    .references(() => orders.id, { onDelete: "cascade" })
+    .notNull(),
+  esimId: integer("esim_id")
+    .references(() => esims.id, { onDelete: "cascade" })
+    .notNull(),
+  quantity: smallint("quantity").notNull(),
+});
 
 export const countriesRelation = relations(countries, ({ many }) => ({
   esims: many(esims),
@@ -70,36 +70,21 @@ export const ordersRelation = relations(orders, ({ one }) => ({
   }),
 }));
 
-// export const countriesRelation = relations(countries, ({ many }) => ({
-//   esims: many(esims),
-// }));
+export const esimsOrderItemsRelation = relations(esims, ({ many }) => ({
+  orderItems: many(orderItems),
+}));
 
-// export const esimsRelation = relations(esims, ({ one }) => ({
-//   country: one(countries, {
-//     fields: [esims.country],
-//     references: [countries.code],
-//   }),
-// }));
+export const ordersOrderItemsRelation = relations(esims, ({ many }) => ({
+  orderItems: many(orderItems),
+}));
 
-// export const orderItemsRelations = relations(orderItems, ({ one }) => ({
-//   order: one(orders, {
-//     fields: [orderItems.orderId],
-//     references: [orders.id],
-//   }),
-//   esim: one(esims, {
-//     fields: [orderItems.esimId],
-//     references: [esims.id],
-//   }),
-// }));
-
-// export const ordersRelation = relations(users, ({ many }) => ({
-//   orders: many(orders),
-// }));
-
-// export const orderItemsOrderRelation = relations(orders, ({ many }) => ({
-//   orderItems: many(orderItems),
-// }));
-
-// export const orderItemsEsimRelation = relations(esims, ({ many }) => ({
-//   orderItems: many(orderItems),
-// }));
+export const orderItemsRelation = relations(orderItems, ({ one }) => ({
+  esim: one(esims, {
+    fields: [orderItems.esimId],
+    references: [esims.id],
+  }),
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
+}));
