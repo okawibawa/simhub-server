@@ -1,23 +1,14 @@
-import pg from "pg";
-import { HTTPException } from "hono/http-exception";
-import { authSignUp } from "../entities";
+import { authDbRepository } from "../db/repositories";
 
-import { authQuery } from "../db/queries";
+import { authSignIn, authSignUp } from "../entities";
 
 const auth = () => {
-  const createUser = async ({
-    email,
-    username,
-    password,
-  }: authSignUp): Promise<authSignUp[] | undefined> => {
-    try {
-      return await authQuery.createUser({ email, username, password });
-    } catch (error) {
-      throw new Error();
-    }
-  };
+  const createUser = ({ email, username, password }: authSignUp) =>
+    authDbRepository.createUser({ email, username, password });
 
-  return { createUser };
+  const getUser = ({ email }: authSignIn) => authDbRepository.getUser({ email });
+
+  return { createUser, getUser };
 };
 
 export const authRepository = auth();

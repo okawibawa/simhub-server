@@ -1,26 +1,18 @@
-import bcrypt from "bcrypt";
-
 import { authSignIn, authSignUp } from "../entities";
 
-import { authRepository } from "../repositories";
-
 const auth = () => {
-  async function signUp({ email, username, password }: authSignUp) {
-    try {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const signUp = async ({ email, username, password }: authSignUp): Promise<authSignUp> => {
+    return { email, username, password };
+  };
 
-      return await authRepository.createUser({ email, username, password: hashedPassword });
-    } catch (error) {
-      throw new Error();
-    }
-  }
-
-  async function signIn({ email, password }: authSignIn) {
+  const signIn = async ({ email, password }: authSignIn) => {
     return { email, password };
-  }
+  };
 
-  return { signUp, signIn };
+  return {
+    signUp,
+    signIn,
+  };
 };
 
 export const authService = auth();

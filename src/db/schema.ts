@@ -19,10 +19,6 @@ export const countries = pgTable("countries", {
   name: varchar("name").unique().notNull(),
 });
 
-export const countriesRelation = relations(countries, ({ many }) => ({
-  esims: many(esims),
-}));
-
 export const esims = pgTable("esims", {
   id: serial("id").primaryKey(),
   type: esimsType("type").notNull(),
@@ -30,48 +26,80 @@ export const esims = pgTable("esims", {
   dataUnit: esimsDataUnit("data_unit").notNull(),
   priceInUsd: numeric("price_in_usd", { precision: 10, scale: 2 }).notNull(),
   durationInDays: smallint("duration_in_days").notNull(),
-  country: varchar("code")
+  countryCode: varchar("country_code")
     .references(() => countries.code, { onDelete: "cascade" })
     .notNull(),
 });
 
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+});
+
+// export const orderItems = pgTable("order_items", {
+//   orderId: integer("order_id")
+//     .references(() => orders.id, { onDelete: "cascade" })
+//     .notNull(),
+//   esimId: integer("esim_id")
+//     .references(() => esims.id, { onDelete: "cascade" })
+//     .notNull(),
+//   quantity: smallint("quantity").notNull(),
+// });
+
+export const countriesRelation = relations(countries, ({ many }) => ({
+  esims: many(esims),
+}));
+
 export const esimsRelation = relations(esims, ({ one }) => ({
-  country: one(countries, {
-    fields: [esims.country],
+  esim: one(countries, {
+    fields: [esims.countryCode],
     references: [countries.code],
   }),
 }));
 
-export const ordersRelation = relations(users, ({ many }) => ({
+export const usersRelation = relations(users, ({ many }) => ({
   orders: many(orders),
 }));
 
-export const orders = pgTable("orders", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
-});
-
-export const orderItemsOrderRelation = relations(orders, ({ many }) => ({
-  orderItems: many(orderItems),
-}));
-
-export const orderItemsEsimRelation = relations(esims, ({ many }) => ({
-  orderItems: many(orderItems),
-}));
-
-export const orderItems = pgTable("order_items", {
-  orderId: integer("order_id").references(() => orders.id, { onDelete: "cascade" }),
-  esimId: integer("esim_id").references(() => esims.id, { onDelete: "cascade" }),
-  quantity: smallint("quantity").notNull(),
-});
-
-export const orderItemsRelations = relations(orderItems, ({ one }) => ({
-  order: one(orders, {
-    fields: [orderItems.orderId],
-    references: [orders.id],
-  }),
-  esim: one(esims, {
-    fields: [orderItems.esimId],
-    references: [esims.id],
+export const ordersRelation = relations(orders, ({ one }) => ({
+  order: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
   }),
 }));
+
+// export const countriesRelation = relations(countries, ({ many }) => ({
+//   esims: many(esims),
+// }));
+
+// export const esimsRelation = relations(esims, ({ one }) => ({
+//   country: one(countries, {
+//     fields: [esims.country],
+//     references: [countries.code],
+//   }),
+// }));
+
+// export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+//   order: one(orders, {
+//     fields: [orderItems.orderId],
+//     references: [orders.id],
+//   }),
+//   esim: one(esims, {
+//     fields: [orderItems.esimId],
+//     references: [esims.id],
+//   }),
+// }));
+
+// export const ordersRelation = relations(users, ({ many }) => ({
+//   orders: many(orders),
+// }));
+
+// export const orderItemsOrderRelation = relations(orders, ({ many }) => ({
+//   orderItems: many(orderItems),
+// }));
+
+// export const orderItemsEsimRelation = relations(esims, ({ many }) => ({
+//   orderItems: many(orderItems),
+// }));

@@ -26,10 +26,8 @@ app.post(
 
       console.log({ user });
 
-      return c.json(user);
-    } catch (error) {
-      throw new Error();
-    }
+      return c.json({ ok: true });
+    } catch (error) {}
   }
 );
 
