@@ -18,7 +18,7 @@ const loadEnvironmentVariables = () => {
   const environmentPath = getEnvironmentPath();
 
   if (!fs.existsSync(environmentPath)) {
-    console.warn(`Environment file for ${process.env.NODE_ENV} is not found.`);
+    console.warn(`Environment variables file for the current environment is not found.`);
     return;
   }
 
