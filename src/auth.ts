@@ -18,16 +18,16 @@ app.post(
     const validatedBody = c.req.valid("form");
 
     try {
-      const user = await authService.signUp({
+      await authService.signUp({
         email: validatedBody.email,
         username: validatedBody.username,
         password: validatedBody.password,
       });
 
-      console.log({ user });
-
-      return c.json({ ok: true });
-    } catch (error) {}
+      return c.json({ ok: true, message: "User successfully created!" });
+    } catch (error) {
+      throw error;
+    }
   }
 );
 

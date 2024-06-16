@@ -3,7 +3,7 @@ import { Hono } from "hono";
 
 import { environment } from "./config";
 
-// import { customErrorMiddleware } from "./middlewares/custom-error.middleware";
+import { customErrorMiddleware } from "./middlewares/custom-error.middleware";
 
 import auth from "./auth";
 
@@ -16,7 +16,7 @@ app.get("/", (c) => {
 
 app.route("/auth", auth);
 
-// app.use(customErrorMiddleware());
+app.use(customErrorMiddleware());
 
 serve({
   fetch: app.fetch,
