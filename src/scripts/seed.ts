@@ -25,7 +25,7 @@ const seed = async () => {
     await db.insert(schema.esims).values([
       {
         id: 1,
-        country: "JP",
+        countryCode: "JP",
         dataUnit: "gb",
         durationInDays: 8,
         plan: "unlimited",
@@ -34,7 +34,7 @@ const seed = async () => {
       },
       {
         id: 2,
-        country: "JP",
+        countryCode: "JP",
         dataUnit: "gb",
         durationInDays: 10,
         plan: "quota",
@@ -43,7 +43,7 @@ const seed = async () => {
       },
       {
         id: 3,
-        country: "US",
+        countryCode: "US",
         dataUnit: "gb",
         durationInDays: 12,
         plan: "unlimited",
