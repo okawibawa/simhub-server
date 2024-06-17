@@ -10,7 +10,7 @@ export const authSignInSchema = z.object({
     }),
 });
 
-export type authSignIn = z.infer<typeof authSignInSchema>;
+export type authSignIn = z.infer<typeof authSignInSchema> & { id?: number };
 
 export const authSignUpSchema = z.object({
   email: z.string().email({ message: "Invalid email format." }),

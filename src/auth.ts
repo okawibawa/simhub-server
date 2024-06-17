@@ -42,9 +42,12 @@ app.post(
     const validatedBody = c.req.valid("form");
 
     try {
-      await authService.signIn({ email: validatedBody.email, password: validatedBody.password });
+      const userJwt = await authService.signIn({
+        email: validatedBody.email,
+        password: validatedBody.password,
+      });
 
-      return c.json({ ok: true, message: "User successfully logged in!" });
+      return c.json({ ok: true, message: "User successfully logged in!", token: userJwt });
     } catch (error) {
       throw error;
     }

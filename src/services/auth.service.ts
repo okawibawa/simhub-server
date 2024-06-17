@@ -1,9 +1,11 @@
 import bcrypt from "bcrypt";
+import { HTTPException } from "hono/http-exception";
 
 import { authSignIn, authSignUp } from "../entities";
 
 import { authRepository } from "../repositories/auth.repository";
-import { HTTPException } from "hono/http-exception";
+
+import { generateJwt } from "../utils";
 
 const auth = () => {
   const signUp = async ({ email, username, password }: authSignUp) => {
@@ -30,6 +32,10 @@ const auth = () => {
       if (!comparePassword) {
         throw new HTTPException(400, { message: "Wrong password!" });
       }
+
+      const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
+
+      return jwtToken;
     } catch (error) {
       throw error;
     }

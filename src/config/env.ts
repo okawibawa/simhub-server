@@ -8,6 +8,7 @@ config();
 const environmentSchema = z.object({
   PORT: z.coerce.number().int(),
   DATABASE_URL: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 const getEnvironmentPath = () => {
@@ -38,6 +39,7 @@ const validateEnvironment = () => {
   return {
     port: parsedEnvironment.data.PORT,
     databaseUrl: parsedEnvironment.data.DATABASE_URL,
+    jwtSecret: parsedEnvironment.data.JWT_SECRET,
   };
 };
 
