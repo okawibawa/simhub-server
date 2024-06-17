@@ -10,6 +10,8 @@ const auth = () => {
     try {
       await authDbRepository.createUser({ email, username, password });
     } catch (error) {
+      console.log({ error });
+
       if (error instanceof pg.DatabaseError) {
         if (error.code === "23505") {
           throw new HTTPException(400, { message: "Email is already taken!" });
@@ -20,7 +22,15 @@ const auth = () => {
     }
   };
 
-  const getUser = ({ email }: authSignIn) => authDbRepository.getUser({ email });
+  const getUser = async ({ email }: Pick<authSignIn, "email">): Promise<authSignIn> => {
+    try {
+      const user = await authDbRepository.getUser({ email });
+
+      return user[0];
+    } catch (error) {
+      throw error;
+    }
+  };
 
   return { createUser, getUser };
 };

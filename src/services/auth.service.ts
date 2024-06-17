@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { authSignIn, authSignUp } from "../entities";
 
 import { authRepository } from "../repositories/auth.repository";
+import { HTTPException } from "hono/http-exception";
 
 const auth = () => {
   const signUp = async ({ email, username, password }: authSignUp) => {
@@ -17,7 +18,21 @@ const auth = () => {
   };
 
   const signIn = async ({ email, password }: authSignIn) => {
-    return { email, password };
+    try {
+      const user = await authRepository.getUser({ email });
+
+      if (!user) {
+        throw new HTTPException(400, { message: "User not found!" });
+      }
+
+      const comparePassword = await bcrypt.compare(password, user.password);
+
+      if (!comparePassword) {
+        throw new HTTPException(400, { message: "Wrong password!" });
+      }
+    } catch (error) {
+      throw error;
+    }
   };
 
   return {

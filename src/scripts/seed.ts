@@ -15,8 +15,18 @@ const seed = async () => {
     await db.delete(schema.users);
 
     await db.insert(schema.users).values([
-      { id: 1, username: "Oka", email: "okaa.wibawa@gmail.com", password: "Oka$111$Oka" },
-      { id: 2, username: "Oka Wirawan", email: "okaawirawan@gmail.com", password: "Oka$222$Oka" },
+      {
+        id: 1,
+        username: "Oka",
+        email: "okaa.wibawa@gmail.com",
+        password: "$2b$10$69xzUgrXTIS4cCt1fQF//eQONGwVVg6be9oYW4A4yGDCVjTZkHYfy", // for this seed example, the password is "Oka$111$Oka"
+      },
+      {
+        id: 2,
+        username: "Oka Wirawan",
+        email: "okaawirawan@gmail.com",
+        password: "$2b$10$42H2G3Ld8KPwEmD9PDWGPeCmQTpE9M7s0W/S6KiE2PxBMPnM5Nz.q", // for this seed example, the password is "Oka$222$Oka"
+      },
     ]);
     await db.insert(schema.countries).values([
       { code: "JP", name: "Japan" },
