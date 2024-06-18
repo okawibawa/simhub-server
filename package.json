@@ -7,15 +7,31 @@
     "yarn": ">=1.22.19"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx watch src/index.ts"
+    "build": "NODE_ENV=production tsc",
+    "dev": "NODE_ENV=development tsx watch src/index.ts",
+    "db:generate:dev": "NODE_ENV=development drizzle-kit generate",
+    "db:push:dev": "NODE_ENV=development drizzle-kit push",
+    "db:studio:dev": "NODE_ENV=development drizzle-kit studio",
+    "db:seed:dev": "NODE_ENV=development tsx src/scripts/seed.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.3",
-    "hono": "^4.4.6"
+    "@hono/zod-validator": "^0.2.2",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.31.2",
+    "hono": "^4.4.6",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.12.0",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "@types/pg": "^8.11.6",
+    "drizzle-kit": "^0.22.7",
     "prettier": "^3.3.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.5"
