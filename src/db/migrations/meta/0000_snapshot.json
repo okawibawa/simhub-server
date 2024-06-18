@@ -1,5 +1,5 @@
 {
-  "id": "64382397-0051-4a1d-a2e4-828e1b66506e",
+  "id": "23f4b753-8b8d-4b36-bdbc-b098acefb272",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -145,7 +145,7 @@
         "order_id": {
           "name": "order_id",
           "type": "integer",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "esim_id": {
@@ -264,18 +264,18 @@
         "session_id": {
           "name": "session_id",
           "type": "varchar",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "user_id": {
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp(6) with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -283,7 +283,7 @@
           "name": "is_revoked",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": false
         },
         "created_at": {

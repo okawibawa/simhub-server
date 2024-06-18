@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "esims" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "order_items" (
-	"order_id" integer NOT NULL,
+	"order_id" integer PRIMARY KEY NOT NULL,
 	"esim_id" integer NOT NULL,
 	"quantity" smallint NOT NULL,
 	"created_at" timestamp (6) with time zone DEFAULT now(),
@@ -53,10 +53,10 @@ CREATE TABLE IF NOT EXISTS "orders" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
-	"session_id" varchar NOT NULL,
-	"user_id" integer,
-	"expires_at" timestamp (6) with time zone NOT NULL,
-	"is_revoked" boolean DEFAULT false,
+	"session_id" varchar PRIMARY KEY NOT NULL,
+	"user_id" integer NOT NULL,
+	"expires_at" timestamp(6) with time zone NOT NULL,
+	"is_revoked" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp (6) with time zone DEFAULT now(),
 	CONSTRAINT "session_session_id_unique" UNIQUE("session_id")
 );

@@ -25,3 +25,9 @@ export const authSignUpSchema = z.object({
 });
 
 export type authSignUp = z.infer<typeof authSignUpSchema>;
+
+export const authSignOutSchema = z.object({
+  id: z.coerce.number(),
+});
+
+export type authSignOut = z.infer<typeof authSignOutSchema>;
