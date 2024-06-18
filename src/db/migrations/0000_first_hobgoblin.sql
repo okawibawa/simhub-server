@@ -19,6 +19,8 @@ END $$;
 CREATE TABLE IF NOT EXISTS "countries" (
 	"code" varchar PRIMARY KEY NOT NULL,
 	"name" varchar NOT NULL,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"updated_at" timestamp (6) with time zone DEFAULT now(),
 	CONSTRAINT "countries_code_unique" UNIQUE("code"),
 	CONSTRAINT "countries_name_unique" UNIQUE("name")
 );
@@ -30,18 +32,33 @@ CREATE TABLE IF NOT EXISTS "esims" (
 	"data_unit" "esims_data_unit" NOT NULL,
 	"price_in_usd" numeric(10, 2) NOT NULL,
 	"duration_in_days" smallint NOT NULL,
-	"country_code" varchar NOT NULL
+	"country_code" varchar NOT NULL,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"updated_at" timestamp (6) with time zone DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "order_items" (
 	"order_id" integer NOT NULL,
 	"esim_id" integer NOT NULL,
-	"quantity" smallint NOT NULL
+	"quantity" smallint NOT NULL,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"updated_at" timestamp (6) with time zone DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orders" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"user_id" integer NOT NULL
+	"user_id" integer NOT NULL,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"updated_at" timestamp (6) with time zone DEFAULT now()
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "session" (
+	"session_id" varchar NOT NULL,
+	"user_id" integer,
+	"expires_at" timestamp (6) with time zone NOT NULL,
+	"is_revoked" boolean DEFAULT false,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	CONSTRAINT "session_session_id_unique" UNIQUE("session_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
@@ -49,6 +66,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"username" varchar NOT NULL,
 	"email" varchar NOT NULL,
 	"password" varchar NOT NULL,
+	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"updated_at" timestamp (6) with time zone DEFAULT now(),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -72,6 +91,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "orders" ADD CONSTRAINT "orders_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "session" ADD CONSTRAINT "session_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
