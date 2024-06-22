@@ -11,6 +11,16 @@ const session = () => {
     }
   };
 
+  const getSession = async ({ id }: authSignOutEntity) => {
+    try {
+      const userSession = await sessionRepository.getSession({ id });
+
+      return userSession;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const revokeSession = async ({ id }: authSignOutEntity) => {
     try {
       await sessionRepository.revokeSession({ id });
@@ -21,6 +31,7 @@ const session = () => {
 
   return {
     storeSession,
+    getSession,
     revokeSession,
   };
 };

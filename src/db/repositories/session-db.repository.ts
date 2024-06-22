@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { dbInstance } from "..";
 
@@ -13,15 +13,23 @@ const session = () => {
       .insert(sessionSchema)
       .values({ sessionId, userId, expiresAt, isRevoked });
 
+  const getSession = async ({ id }: authSignOutEntity) =>
+    await dbInstance
+      .getDbInstance()
+      .select()
+      .from(sessionSchema)
+      .where(eq(sessionSchema.userId, id));
+
   const updateSession = async ({ id }: authSignOutEntity) =>
     await dbInstance
       .getDbInstance()
       .update(sessionSchema)
       .set({ isRevoked: true, expiresAt: updateTimestamp })
-      .where(eq(sessionSchema.userId, id));
+      .where(and(eq(sessionSchema.userId, id), eq(sessionSchema.isRevoked, false)));
 
   return {
     storeSession,
+    getSession,
     updateSession,
   };
 };

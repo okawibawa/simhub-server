@@ -46,8 +46,11 @@ const auth = () => {
         throw new HTTPException(400, { message: "Wrong password!" });
       }
 
-      // get session based on user email
-      // if exist, updates expiresAt to current datetime and isRevoked to false
+      const userSession = await sessionService.getSession({ id: user.id! });
+
+      if (userSession) {
+        await sessionService.revokeSession({ id: user.id! });
+      }
 
       const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
 
