@@ -26,16 +26,12 @@ jobs:
     needs: build
 
     name: deploy
-    env:
-      PORT: ${{ env.PORT }}
-      DATABASE_URL: ${{ env.DATABASE_URL }}
-      JWT_SECRET: ${{ secret.JWT_SECRET }}
     steps:
       - uses: actions/checkout@v3
       - run: docker container rm -f ${{ env.DOCKER_CONTAINER }} || true
       - run: >
           docker run -d -p 8000:8000 --name ${{ env.DOCKER_CONTAINER }} \
           -e PORT=${{ env.PORT }} \
-          -e JWT_SECRET=${{ env.JWT_SECRET }} \
+          -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
           -e DATABASE_URL=${{ env.DATABASE_URL }} \
           ${{ env.DOCKER_IMAGE }}:development
