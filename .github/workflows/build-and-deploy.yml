@@ -13,21 +13,21 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    env:
-      jwt_secret: ${{ secrets.JWT_SECRET }}
 
     name: build
     steps:
       - uses: actions/checkout@v3
-      - run: echo ${{ env.jwt_secret }}
       # - run: >
       #     docker build -t ${{ env.DOCKER_IMAGE }}:development .
-  # deploy:
-  #   runs-on: self-hosted
-  #   needs: build
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - run: docker container rm -f ${{ env.DOCKER_CONTAINER }} || true
-  #     - run: >
-  #         docker run -d -p 8000:8000 --name ${{ env.DOCKER_CONTAINER }} ${{ env.DOCKER_IMAGE }}:development
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    name: deploy
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker container rm -f ${{ env.DOCKER_CONTAINER }} || true
+      - run: echo ${{ env.JWT_SECRET }}
