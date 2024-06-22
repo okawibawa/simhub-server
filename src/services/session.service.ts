@@ -1,10 +1,9 @@
 import { sessionRepository } from "../repositories/session.repository";
 
-import { session, authSignOut } from "../entities";
-import { HTTPException } from "hono/http-exception";
+import { sessionEntity, authSignOutEntity } from "../entities";
 
 const session = () => {
-  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: session) => {
+  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: sessionEntity) => {
     try {
       await sessionRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
     } catch (error) {
@@ -12,7 +11,7 @@ const session = () => {
     }
   };
 
-  const revokeSession = async ({ id }: authSignOut) => {
+  const revokeSession = async ({ id }: authSignOutEntity) => {
     try {
       await sessionRepository.revokeSession({ id });
     } catch (error) {

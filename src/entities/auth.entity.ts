@@ -1,20 +1,7 @@
 import { z } from "zod";
 
-export const authSignInSchema = z.object({
+const authBaseSchema = z.object({
   email: z.string().email({ message: "Invalid email format." }),
-  password: z
-    .string()
-    .min(6, { message: "Minimum of 6 characters." })
-    .regex(/^(?=.*[A-Z])(?=.*[\W_]).+$/, {
-      message: "Must contain an uppercase and a special character.",
-    }),
-});
-
-export type authSignIn = z.infer<typeof authSignInSchema> & { id?: number };
-
-export const authSignUpSchema = z.object({
-  email: z.string().email({ message: "Invalid email format." }),
-  username: z.string().min(3, { message: "Minimum of 3 characters." }),
   password: z
     .string()
     .min(6, { message: "Minimum of 6 characters." })
@@ -24,10 +11,14 @@ export const authSignUpSchema = z.object({
     .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: "Must contain one special character." }),
 });
 
-export type authSignUp = z.infer<typeof authSignUpSchema>;
-
-export const authSignOutSchema = z.object({
+export const authSignInDto = authBaseSchema;
+export const authSignUpDto = authBaseSchema.extend({
+  username: z.string().min(3, { message: "Minimum of 3 characters." }),
+});
+export const authSignOutDto = z.object({
   id: z.coerce.number(),
 });
 
-export type authSignOut = z.infer<typeof authSignOutSchema>;
+export type authSignInEntity = z.infer<typeof authSignInDto> & { id?: number };
+export type authSignUpEntity = z.infer<typeof authSignUpDto> & { id?: number };
+export type authSignOutEntity = z.infer<typeof authSignOutDto>;

@@ -7,4 +7,4 @@ export const sessionSchema = z.object({
   isRevoked: z.boolean().default(false),
 });
 
-export type session = z.infer<typeof sessionSchema>;
+export type sessionEntity = z.infer<typeof sessionSchema>;

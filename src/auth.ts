@@ -1,16 +1,16 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 
-import { authSignInSchema, authSignOutSchema, authSignUpSchema } from "./entities";
+import { authSignInDto, authSignOutDto, authSignUpDto } from "./entities";
 
-import { authService, sessionService } from "./services";
+import { authService } from "./services";
 import { deleteCookie, setCookie } from "hono/cookie";
 
 const app = new Hono();
 
 app.post(
   "/sign-up",
-  zValidator("form", authSignUpSchema, (result, c) => {
+  zValidator("form", authSignUpDto, (result, c) => {
     if (!result.success) {
       return c.json({ ok: false, message: result.error.errors });
     }
@@ -19,13 +19,19 @@ app.post(
     const validatedBody = c.req.valid("form");
 
     try {
-      await authService.signUp({
+      const userJwt = await authService.signUp({
         email: validatedBody.email,
         username: validatedBody.username,
         password: validatedBody.password,
       });
 
-      return c.json({ ok: true, message: "User successfully created!" });
+      setCookie(c, "session_token", userJwt, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60,
+        expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+      });
+
+      return c.json({ ok: true, message: "User successfully created!", token: userJwt });
     } catch (error) {
       throw error;
     }
@@ -34,7 +40,7 @@ app.post(
 
 app.post(
   "/sign-in",
-  zValidator("form", authSignInSchema, (result, c) => {
+  zValidator("form", authSignInDto, (result, c) => {
     if (!result.success) {
       return c.json({ ok: false, message: result.error.errors });
     }
@@ -63,7 +69,7 @@ app.post(
 
 app.post(
   "/sign-out",
-  zValidator("form", authSignOutSchema, (result, c) => {
+  zValidator("form", authSignOutDto, (result, c) => {
     if (!result.success) {
       return c.json({ ok: false, message: result.error.errors });
     }

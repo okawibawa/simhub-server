@@ -1,9 +1,9 @@
 import { sessionDbRepository } from "../db/repositories";
 
-import { session, authSignOut } from "../entities";
+import { sessionEntity, authSignOutEntity } from "../entities";
 
 const session = () => {
-  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: session) => {
+  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: sessionEntity) => {
     try {
       await sessionDbRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
     } catch (error) {
@@ -11,7 +11,7 @@ const session = () => {
     }
   };
 
-  const revokeSession = async ({ id }: authSignOut) => {
+  const revokeSession = async ({ id }: authSignOutEntity) => {
     try {
       await sessionDbRepository.updateSession({ id });
     } catch (error) {

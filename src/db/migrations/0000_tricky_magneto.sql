@@ -19,8 +19,8 @@ END $$;
 CREATE TABLE IF NOT EXISTS "countries" (
 	"code" varchar PRIMARY KEY NOT NULL,
 	"name" varchar NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
-	"updated_at" timestamp (6) with time zone DEFAULT now(),
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "countries_code_unique" UNIQUE("code"),
 	CONSTRAINT "countries_name_unique" UNIQUE("name")
 );
@@ -33,23 +33,23 @@ CREATE TABLE IF NOT EXISTS "esims" (
 	"price_in_usd" numeric(10, 2) NOT NULL,
 	"duration_in_days" smallint NOT NULL,
 	"country_code" varchar NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
-	"updated_at" timestamp (6) with time zone DEFAULT now()
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "order_items" (
 	"order_id" integer PRIMARY KEY NOT NULL,
 	"esim_id" integer NOT NULL,
 	"quantity" smallint NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
-	"updated_at" timestamp (6) with time zone DEFAULT now()
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orders" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
-	"updated_at" timestamp (6) with time zone DEFAULT now()
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS "session" (
 	"user_id" integer NOT NULL,
 	"expires_at" timestamp(6) with time zone NOT NULL,
 	"is_revoked" boolean DEFAULT false NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "session_session_id_unique" UNIQUE("session_id")
 );
 --> statement-breakpoint
@@ -66,8 +67,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"username" varchar NOT NULL,
 	"email" varchar NOT NULL,
 	"password" varchar NOT NULL,
-	"created_at" timestamp (6) with time zone DEFAULT now(),
-	"updated_at" timestamp (6) with time zone DEFAULT now(),
+	"created_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

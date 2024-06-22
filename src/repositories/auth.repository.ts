@@ -3,12 +3,18 @@ import pg from "pg";
 
 import { authDbRepository } from "../db/repositories";
 
-import { authSignIn, authSignUp } from "../entities";
+import { authSignInEntity, authSignUpEntity } from "../entities";
 
 const auth = () => {
-  const createUser = async ({ email, username, password }: authSignUp) => {
+  const createUser = async ({
+    email,
+    username,
+    password,
+  }: authSignUpEntity): Promise<authSignUpEntity> => {
     try {
-      await authDbRepository.createUser({ email, username, password });
+      const user = await authDbRepository.createUser({ email, username, password });
+
+      return user[0];
     } catch (error) {
       if (error instanceof pg.DatabaseError) {
         if (error.code === "23505") {
@@ -20,7 +26,7 @@ const auth = () => {
     }
   };
 
-  const getUser = async ({ email }: Pick<authSignIn, "email">): Promise<authSignIn> => {
+  const getUser = async ({ email }: Pick<authSignInEntity, "email">): Promise<authSignInEntity> => {
     try {
       const user = await authDbRepository.getUser({ email });
 
@@ -30,7 +36,7 @@ const auth = () => {
     }
   };
 
-  const getUserById = async ({ id }: Pick<authSignIn, "id">): Promise<authSignIn> => {
+  const getUserById = async ({ id }: Pick<authSignUpEntity, "id">): Promise<authSignUpEntity> => {
     try {
       const user = await authDbRepository.getUserById({ id });
 
