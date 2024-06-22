@@ -1,0 +1,33 @@
+name: build-and-deploy
+run-name: ${{ github.actor }} is building and deploying ${{ github.event.repository.name }}
+
+env:
+  DOCKER_IMAGE: simhub-server
+  DOCKER_CONTAINER: simhub-server
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      jwt_secret: ${{ secrets.JWT_SECRET }}
+
+    name: build
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo ${{ env.jwt_secret }}
+      # - run: >
+      #     docker build -t ${{ env.DOCKER_IMAGE }}:development .
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: build
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - run: docker container rm -f ${{ env.DOCKER_CONTAINER }} || true
+  #     - run: >
+  #         docker run -d -p 8000:8000 --name ${{ env.DOCKER_CONTAINER }} ${{ env.DOCKER_IMAGE }}:development
