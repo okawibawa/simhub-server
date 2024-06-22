@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY package*.json .
 
-RUN yarn
+RUN npm run install
 
 COPY . .
 
-RUN yarn start
+RUN npm run build
 
 EXPOSE 8000
 
