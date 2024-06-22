@@ -17,8 +17,8 @@ jobs:
     name: build
     steps:
       - uses: actions/checkout@v3
-      # - run: >
-      #     docker build -t ${{ env.DOCKER_IMAGE }}:development .
+      - run: >
+          docker build -t ${{ env.DOCKER_IMAGE }}:development .
 
   deploy:
     runs-on: self-hosted
