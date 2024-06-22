@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: docker container rm -f ${{ env.DOCKER_CONTAINER }} || true
-      - run: >
+      - run: |
           docker run -d -p 8000:8000 --name ${{ env.DOCKER_CONTAINER }} \
           -e PORT=${{ env.PORT }} \
           -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
