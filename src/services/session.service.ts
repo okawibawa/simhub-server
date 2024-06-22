@@ -1,4 +1,4 @@
-import { sessionRepository } from "../repositories/session.repository";
+import { sessionRepository } from "../repositories";
 
 import { sessionEntity, authSignOutEntity } from "../entities";
 

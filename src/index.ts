@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 
 import { environment } from "./config";
 
-import { customErrorMiddleware } from "./middlewares/custom-error.middleware";
+import { customErrorMiddleware } from "./middlewares";
 
 import auth from "./auth";
 

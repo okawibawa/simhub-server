@@ -3,7 +3,7 @@ import { HTTPException } from "hono/http-exception";
 
 import { authSignInEntity, authSignUpEntity, authSignOutEntity } from "../entities";
 
-import { authRepository } from "../repositories/auth.repository";
+import { authRepository } from "../repositories";
 
 import { generateJwt } from "../utils";
 
