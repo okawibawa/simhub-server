@@ -19,7 +19,6 @@ const auth = () => {
     } catch (error: unknown) {
       if (isPgDatabaseError(error)) {
         if (error.constraint === "users_email_unique") {
-          console.log({ error: error.constraint });
           throw CustomDatabaseError(`Email is already taken.`, 400);
         }
 

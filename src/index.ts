@@ -4,6 +4,8 @@ import { cors } from "hono/cors";
 
 import { environment } from "./config";
 
+import { errorMiddleware } from "./middlewares";
+
 import auth from "./auth";
 
 const app = new Hono();
@@ -15,6 +17,11 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(async (_, next) => {
+  await next();
+  errorMiddleware;
+});
 
 app.get("/", (c) => {
   return c.text("Hono is running fiercely 🔥");

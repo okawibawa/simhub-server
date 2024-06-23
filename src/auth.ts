@@ -16,7 +16,7 @@ app.post(
       return c.json({ ok: false, message: result.error.errors }, 400);
     }
   }),
-  async (c) => {
+  async (c, next) => {
     const validatedBody = c.req.valid("form");
 
     try {
@@ -38,23 +38,7 @@ app.post(
 
       return c.json({ ok: true, message: "User successfully created!" }, 201);
     } catch (error: unknown) {
-      if (isDatabaseError(error)) {
-        return c.json({ ok: false, message: error.message }, error.code);
-      }
-
-      if (isNotFoundError(error)) {
-        return c.json({ ok: false, message: error.message }, error.code);
-      }
-
-      if (isValidationError(error)) {
-        return c.json({ ok: false, message: error.message }, error.code);
-      }
-
-      if (isBadRequestError(error)) {
-        return c.json({ ok: false, message: error.message }, error.code);
-      }
-
-      return c.json({ ok: false, message: "An unexpected error occurred." }, 500);
+      throw error;
     }
   }
 );

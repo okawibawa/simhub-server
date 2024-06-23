@@ -22,7 +22,7 @@ export const ValidationError = createCustomError("ValidationError");
 export const BadRequestError = createCustomError("BadRequestError");
 
 export const isDatabaseError = (error: unknown): error is CustomError =>
-  error instanceof Error && error.name === "DatabaseError" && "code" in error;
+  error instanceof Error && error.name === "DatabaseError";
 export const isNotFoundError = (error: unknown): error is CustomError =>
   error instanceof Error && error.name === "NotFoundError";
 export const isValidationError = (error: unknown): error is CustomError =>
