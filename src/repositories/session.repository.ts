@@ -1,13 +1,21 @@
+import * as pg from "pg";
+
 import { sessionDbRepository } from "../db/repositories";
 
 import { sessionEntity, authSignOutEntity } from "../entities";
+
+import { DatabaseError as CustomDatabaseError, isPgDatabaseError } from "../errors";
 
 const session = () => {
   const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: sessionEntity) => {
     try {
       await sessionDbRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
     } catch (error) {
-      throw error;
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -17,7 +25,11 @@ const session = () => {
 
       return userSession[0];
     } catch (error) {
-      throw error;
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -25,7 +37,11 @@ const session = () => {
     try {
       await sessionDbRepository.updateSession({ id });
     } catch (error) {
-      throw error;
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 

@@ -4,8 +4,6 @@ import { cors } from "hono/cors";
 
 import { environment } from "./config";
 
-import { customErrorMiddleware } from "./middlewares";
-
 import auth from "./auth";
 
 const app = new Hono();
@@ -23,8 +21,6 @@ app.get("/", (c) => {
 });
 
 app.route("/auth", auth);
-
-app.use(customErrorMiddleware());
 
 serve({
   fetch: app.fetch,

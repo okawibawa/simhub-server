@@ -1,5 +1,4 @@
-import bcrypt from "bcrypt";
-import { HTTPException } from "hono/http-exception";
+import { hash, compare } from "bcrypt";
 
 import { authSignInEntity, authSignUpEntity, authSignOutEntity } from "../entities";
 
@@ -9,11 +8,13 @@ import { generateJwt } from "../utils";
 
 import { sessionService } from "./";
 
+import { BadRequestError, NotFoundError, isDatabaseError, isPgDatabaseError } from "../errors";
+
 const auth = () => {
   const signUp = async ({ email, username, password }: authSignUpEntity) => {
     try {
       const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const hashedPassword = await hash(password, saltRounds);
 
       const user = await authRepository.createUser({ email, username, password: hashedPassword });
 
@@ -27,8 +28,13 @@ const auth = () => {
       });
 
       return jwtToken;
-    } catch (error) {
-      throw error;
+    } catch (error: unknown) {
+      if (isDatabaseError(error)) {
+        console.error(error);
+        throw error;
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -37,13 +43,13 @@ const auth = () => {
       const user = await authRepository.getUser({ email });
 
       if (!user) {
-        throw new HTTPException(400, { message: "User not found!" });
+        throw NotFoundError("User not found!", 400);
       }
 
-      const comparePassword = await bcrypt.compare(password, user.password);
+      const comparePassword = await compare(password, user.password);
 
       if (!comparePassword) {
-        throw new HTTPException(400, { message: "Wrong password!" });
+        throw BadRequestError("Wrong password!", 400);
       }
 
       const userSession = await sessionService.getSession({ id: user.id! });
@@ -63,7 +69,12 @@ const auth = () => {
 
       return jwtToken;
     } catch (error) {
-      throw error;
+      if (isDatabaseError(error)) {
+        console.error(error);
+        throw error;
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -72,12 +83,17 @@ const auth = () => {
       const user = await authRepository.getUserById({ id });
 
       if (!user) {
-        throw new HTTPException(400, { message: "User not found!" });
+        throw NotFoundError("User not found!", 400);
       }
 
       await sessionService.revokeSession({ id });
     } catch (error) {
-      throw error;
+      if (isDatabaseError(error)) {
+        console.error(error);
+        throw error;
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 

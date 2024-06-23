@@ -12,6 +12,7 @@
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["./*"]
     }

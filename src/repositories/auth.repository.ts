@@ -1,9 +1,10 @@
-import { HTTPException } from "hono/http-exception";
-import pg from "pg";
+import * as pg from "pg";
 
 import { authDbRepository } from "../db/repositories";
 
 import { authSignInEntity, authSignUpEntity } from "../entities";
+
+import { DatabaseError as CustomDatabaseError, isPgDatabaseError } from "../errors";
 
 const auth = () => {
   const createUser = async ({
@@ -15,14 +16,17 @@ const auth = () => {
       const user = await authDbRepository.createUser({ email, username, password });
 
       return user[0];
-    } catch (error) {
-      if (error instanceof pg.DatabaseError) {
-        if (error.code === "23505") {
-          throw new HTTPException(400, { message: "Email is already taken!" });
+    } catch (error: unknown) {
+      if (isPgDatabaseError(error)) {
+        if (error.constraint === "users_email_unique") {
+          console.log({ error: error.constraint });
+          throw CustomDatabaseError(`Email is already taken.`, 400);
         }
+
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
       }
 
-      throw error;
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -32,7 +36,11 @@ const auth = () => {
 
       return user[0];
     } catch (error) {
-      throw error;
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
@@ -41,8 +49,12 @@ const auth = () => {
       const user = await authDbRepository.getUserById({ id });
 
       return user[0];
-    } catch (error) {
-      throw error;
+    } catch (error: unknown) {
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw Error("An unexpected error occurred.");
     }
   };
 
