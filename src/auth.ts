@@ -61,7 +61,7 @@ app.post(
         maxAge: 24 * 60 * 60,
         expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
         path: "/",
-        domain: ".okawibawa.dev",
+        domain: "simhub.okawibawa.dev",
       });
 
       return c.json({ ok: true, message: "User successfully logged in!" });
