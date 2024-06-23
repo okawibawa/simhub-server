@@ -13,7 +13,8 @@ const port = environment.port || 8000;
 
 app.use(
   cors({
-    origin: ["https://simhub.okawibawa.dev/"],
+    origin: ["https://simhub.okawibawa.dev"],
+    credentials: true,
   })
 );
 

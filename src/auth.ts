@@ -56,11 +56,15 @@ app.post(
 
       setCookie(c, "session_token", userJwt, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         maxAge: 24 * 60 * 60,
         expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+        path: "/",
+        domain: ".okawibawa.dev",
       });
 
-      return c.json({ ok: true, message: "User successfully logged in!", token: userJwt });
+      return c.json({ ok: true, message: "User successfully logged in!" });
     } catch (error) {
       throw error;
     }
