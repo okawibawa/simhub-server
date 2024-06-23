@@ -27,11 +27,15 @@ app.post(
 
       setCookie(c, "session_token", userJwt, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         maxAge: 24 * 60 * 60,
         expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+        path: "/",
+        domain: "simhub.okawibawa.dev",
       });
 
-      return c.json({ ok: true, message: "User successfully created!", token: userJwt });
+      return c.json({ ok: true, message: "User successfully created!" });
     } catch (error) {
       throw error;
     }
