@@ -1,41 +1,58 @@
-import { HTTPException } from "hono/http-exception";
-import pg from "pg";
+import * as pg from "pg";
 
 import { authDbRepository } from "../db/repositories";
 
-import { authSignIn, authSignUp } from "../entities";
+import { authSignInEntity, authSignUpEntity } from "../entities";
+
+import { DatabaseError as CustomDatabaseError, isPgDatabaseError } from "../errors";
 
 const auth = () => {
-  const createUser = async ({ email, username, password }: authSignUp) => {
+  const createUser = async ({
+    email,
+    username,
+    password,
+  }: authSignUpEntity): Promise<authSignUpEntity> => {
     try {
-      await authDbRepository.createUser({ email, username, password });
-    } catch (error) {
-      if (error instanceof pg.DatabaseError) {
-        if (error.code === "23505") {
-          throw new HTTPException(400, { message: "Email is already taken!" });
+      const user = await authDbRepository.createUser({ email, username, password });
+
+      return user[0];
+    } catch (error: unknown) {
+      if (isPgDatabaseError(error)) {
+        if (error.constraint === "users_email_unique") {
+          throw CustomDatabaseError(`Email is already taken.`, 400);
         }
+
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
       }
 
       throw error;
     }
   };
 
-  const getUser = async ({ email }: Pick<authSignIn, "email">): Promise<authSignIn> => {
+  const getUser = async ({ email }: Pick<authSignInEntity, "email">): Promise<authSignInEntity> => {
     try {
       const user = await authDbRepository.getUser({ email });
 
       return user[0];
     } catch (error) {
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
       throw error;
     }
   };
 
-  const getUserById = async ({ id }: Pick<authSignIn, "id">): Promise<authSignIn> => {
+  const getUserById = async ({ id }: Pick<authSignUpEntity, "id">): Promise<authSignUpEntity> => {
     try {
       const user = await authDbRepository.getUserById({ id });
 
       return user[0];
-    } catch (error) {
+    } catch (error: unknown) {
+      if (isPgDatabaseError(error)) {
+        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+      }
+
       throw error;
     }
   };

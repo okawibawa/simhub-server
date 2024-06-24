@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   pgEnum,
   pgTable,
@@ -11,6 +11,8 @@ import {
   boolean,
 } from "drizzle-orm/pg-core";
 
+export const updateTimestamp = sql<string>`CURRENT_TIMESTAMP`;
+
 export const esimsType = pgEnum("esims_type", ["roaming", "local"]);
 
 export const esimsPlan = pgEnum("esims_plan", ["unlimited", "quota"]);
@@ -22,15 +24,15 @@ export const usersSchema = pgTable("users", {
   username: varchar("username").notNull(),
   email: varchar("email").notNull().unique(),
   password: varchar("password").notNull(),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const countriesSchema = pgTable("countries", {
   code: varchar("code").primaryKey().unique().notNull(),
   name: varchar("name").unique().notNull(),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const esimsSchema = pgTable("esims", {
@@ -43,8 +45,8 @@ export const esimsSchema = pgTable("esims", {
   countryCode: varchar("country_code")
     .references(() => countriesSchema.code, { onDelete: "cascade" })
     .notNull(),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const ordersSchema = pgTable("orders", {
@@ -52,8 +54,8 @@ export const ordersSchema = pgTable("orders", {
   userId: integer("user_id")
     .references(() => usersSchema.id, { onDelete: "cascade" })
     .notNull(),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const orderItemsSchema = pgTable("order_items", {
@@ -65,8 +67,8 @@ export const orderItemsSchema = pgTable("order_items", {
     .references(() => esimsSchema.id, { onDelete: "cascade" })
     .notNull(),
   quantity: smallint("quantity").notNull(),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
-  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const sessionSchema = pgTable("session", {
@@ -80,7 +82,8 @@ export const sessionSchema = pgTable("session", {
     mode: "string",
   }).notNull(),
   isRevoked: boolean("is_revoked").notNull().default(false),
-  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow(),
+  createdAt: timestamp("created_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 6, withTimezone: true }).defaultNow().notNull(),
 });
 
 export const countriesRelation = relations(countriesSchema, ({ many }) => ({
