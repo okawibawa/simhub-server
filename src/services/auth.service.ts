@@ -38,13 +38,13 @@ const auth = () => {
       const user = await authRepository.getUser({ email });
 
       if (!user) {
-        throw NotFoundError("User not found!", 400);
+        throw NotFoundError("User not found. Please make sure your email is correct.", 400);
       }
 
       const comparePassword = await compare(password, user.password);
 
       if (!comparePassword) {
-        throw BadRequestError("Wrong password!", 400);
+        throw BadRequestError("Password incorrect. Please double check your password.", 400);
       }
 
       const userSession = await sessionService.getSession({ id: user.id! });
@@ -73,7 +73,7 @@ const auth = () => {
       const user = await authRepository.getUserById({ id });
 
       if (!user) {
-        throw NotFoundError("User not found!", 400);
+        throw NotFoundError("User not found. Please make sure your email is correct.", 400);
       }
 
       await sessionService.revokeSession({ id });

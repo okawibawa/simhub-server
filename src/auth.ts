@@ -1,11 +1,12 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { deleteCookie, setCookie } from "hono/cookie";
 
 import { authSignInDto, authSignOutDto, authSignUpDto } from "./entities";
 
 import { authService } from "./services";
-import { deleteCookie, setCookie } from "hono/cookie";
-import { isBadRequestError, isDatabaseError, isNotFoundError, isValidationError } from "./errors";
+
+import { formatZodErrors } from "./utils";
 
 const app = new Hono();
 
@@ -33,7 +34,7 @@ app.post(
         maxAge: 24 * 60 * 60,
         expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
         path: "/",
-        domain: "simhub.okawibawa.dev",
+        domain: process.env.NODE_ENV === "production" ? "simhub.okawibawa.dev" : "",
       });
 
       return c.json({ ok: true, message: "User successfully created!" }, 201);
@@ -47,7 +48,8 @@ app.post(
   "/sign-in",
   zValidator("form", authSignInDto, (result, c) => {
     if (!result.success) {
-      return c.json({ ok: false, message: result.error.errors }, 400);
+      const formattedErrors = formatZodErrors(result.error.issues);
+      return c.json({ ok: false, message: formattedErrors }, 400);
     }
   }),
   async (c) => {
@@ -66,7 +68,7 @@ app.post(
         maxAge: 24 * 60 * 60,
         expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
         path: "/",
-        domain: "simhub.okawibawa.dev",
+        domain: process.env.NODE_ENV === "production" ? "simhub.okawibawa.dev" : "",
       });
 
       return c.json({ ok: true, message: "User successfully logged in!" }, 200);
