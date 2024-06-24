@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
 
 import { authSignInEntity, authSignUpEntity } from "@/src/entities";
-import { dbInstance } from "..";
 
 import { usersSchema } from "../schema";
 
