@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 const authBaseSchema = z.object({
-  email: z.string().email({ message: "Invalid email format." }),
+  email: z.string().trim().email({ message: "Invalid email format." }),
   password: z
     .string()
+    .trim()
     .min(6, { message: "Minimum of 6 characters." })
     .regex(/[A-Z]/, {
       message: "Must contain an uppercase letter.",
