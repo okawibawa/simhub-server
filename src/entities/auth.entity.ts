@@ -14,7 +14,7 @@ const authBaseSchema = z.object({
 
 export const authSignInDto = authBaseSchema;
 export const authSignUpDto = authBaseSchema.extend({
-  username: z.string().min(3, { message: "Minimum of 3 characters." }),
+  username: z.string().trim().min(3, { message: "Minimum of 3 characters." }),
 });
 export const authSignOutDto = z.object({
   id: z.coerce.number(),
