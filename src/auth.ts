@@ -16,7 +16,7 @@ app.post(
       return c.json({ ok: false, message: result.error.errors }, 400);
     }
   }),
-  async (c, next) => {
+  async (c) => {
     const validatedBody = c.req.valid("form");
 
     try {
@@ -71,23 +71,7 @@ app.post(
 
       return c.json({ ok: true, message: "User successfully logged in!" }, 200);
     } catch (error: unknown) {
-      if (isDatabaseError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isNotFoundError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isValidationError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isBadRequestError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      return c.json({ ok: false, error: "An unexpected error occurred." }, 500);
+      throw error;
     }
   }
 );
@@ -109,23 +93,7 @@ app.post(
 
       return c.json({ ok: true, message: "User successfully logged out!" }, 200);
     } catch (error) {
-      if (isDatabaseError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isNotFoundError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isValidationError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      if (isBadRequestError(error)) {
-        return c.json({ ok: false, error: error.message }, error.code);
-      }
-
-      return c.json({ ok: false, error: "An unexpected error occurred." }, 500);
+      throw error;
     }
   }
 );

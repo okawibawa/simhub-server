@@ -4,9 +4,10 @@ import { cors } from "hono/cors";
 
 import { environment } from "./config";
 
-import { errorMiddleware } from "./middlewares";
+import { errorHandler } from "./middlewares";
 
 import auth from "./auth";
+import { isDatabaseError } from "./errors";
 
 const app = new Hono();
 const port = environment.port || 8000;
@@ -18,10 +19,7 @@ app.use(
   })
 );
 
-app.use(async (_, next) => {
-  await next();
-  errorMiddleware;
-});
+app.onError(errorHandler);
 
 app.get("/", (c) => {
   return c.text("Hono is running fiercely 🔥");

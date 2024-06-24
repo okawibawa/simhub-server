@@ -8,12 +8,7 @@ const session = () => {
     try {
       await sessionRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
     } catch (error: unknown) {
-      if (isDatabaseError(error)) {
-        console.error(error);
-        throw error;
-      }
-
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 
@@ -23,12 +18,7 @@ const session = () => {
 
       return userSession;
     } catch (error: unknown) {
-      if (isDatabaseError(error)) {
-        console.error(error);
-        throw error;
-      }
-
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 

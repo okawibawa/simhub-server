@@ -29,12 +29,7 @@ const auth = () => {
 
       return jwtToken;
     } catch (error: unknown) {
-      if (isDatabaseError(error)) {
-        console.error(error);
-        throw error;
-      }
-
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 
@@ -69,12 +64,7 @@ const auth = () => {
 
       return jwtToken;
     } catch (error) {
-      if (isDatabaseError(error)) {
-        console.error(error);
-        throw error;
-      }
-
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 
@@ -88,12 +78,7 @@ const auth = () => {
 
       await sessionService.revokeSession({ id });
     } catch (error) {
-      if (isDatabaseError(error)) {
-        console.error(error);
-        throw error;
-      }
-
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 

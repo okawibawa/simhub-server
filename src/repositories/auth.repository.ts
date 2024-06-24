@@ -25,7 +25,7 @@ const auth = () => {
         throw CustomDatabaseError(`Database error: ${error.message}`, 500);
       }
 
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 
@@ -39,7 +39,7 @@ const auth = () => {
         throw CustomDatabaseError(`Database error: ${error.message}`, 500);
       }
 
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 
@@ -53,7 +53,7 @@ const auth = () => {
         throw CustomDatabaseError(`Database error: ${error.message}`, 500);
       }
 
-      throw Error("An unexpected error occurred.");
+      throw error;
     }
   };
 

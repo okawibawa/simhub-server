@@ -1,7 +1,7 @@
-import { createMiddleware } from "hono/factory";
+import { Context } from "hono";
 import { isBadRequestError, isDatabaseError, isNotFoundError, isValidationError } from "../errors";
 
-export const errorMiddleware = createMiddleware(async (c) => {
+export const errorHandler = (_: Error, c: Context) => {
   if (isDatabaseError(c.error)) {
     return c.json({ ok: false, message: c.error.message }, c.error.code);
   }
@@ -19,4 +19,4 @@ export const errorMiddleware = createMiddleware(async (c) => {
   }
 
   return c.json({ ok: false, message: "An unexpected error occurred." }, 500);
-});
+};
