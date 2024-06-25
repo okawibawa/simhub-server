@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const sessionSchema = z.object({
-  sessionId: z.string(),
+  sessionId: z.string().trim(),
   userId: z.number(),
-  expiresAt: z.string().datetime({ precision: 6, offset: true }),
+  expiresAt: z.string().trim().datetime({ precision: 6, offset: true }),
   isRevoked: z.boolean().default(false),
 });
 
