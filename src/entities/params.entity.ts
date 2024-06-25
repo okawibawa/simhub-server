@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const paramsSchema = z.object({
-  limit: z.coerce.number().positive(),
+export const esimPlansParamsSchema = z.object({
+  code: z.string().trim(),
 });
 
-export type paramsEntity = z.infer<typeof paramsSchema>;
+export type esimPlansParamsEntity = z.infer<typeof esimPlansParamsSchema>;

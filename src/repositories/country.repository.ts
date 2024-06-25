@@ -1,10 +1,10 @@
 import { countryDbRepository } from "../db/repositories";
-import { paramsEntity } from "../entities/params.entity";
+import { queriesEntity } from "../entities";
 
 import { isPgDatabaseError, DatabaseError } from "../errors";
 
 const country = () => {
-  const getCountries = async (queries: Pick<paramsEntity, "limit">) => {
+  const getCountries = async (queries: Pick<queriesEntity, "limit">) => {
     try {
       const countries = await countryDbRepository.getCountries(queries);
 

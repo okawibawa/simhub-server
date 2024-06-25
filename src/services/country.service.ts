@@ -1,8 +1,8 @@
-import { paramsEntity } from "../entities/params.entity";
+import { queriesEntity } from "../entities";
 import { countryRepository } from "../repositories";
 
 const country = () => {
-  const getCountries = async (queries: Pick<paramsEntity, "limit">) => {
+  const getCountries = async (queries: Pick<queriesEntity, "limit">) => {
     try {
       const countries = await countryRepository.getCountries(queries);
 

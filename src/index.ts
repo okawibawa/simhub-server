@@ -8,6 +8,7 @@ import { errorHandler } from "./middlewares";
 
 import auth from "./auth";
 import countries from "./countries";
+import esims from "./esims";
 
 const app = new Hono();
 const port = environment.port || 8000;
@@ -27,6 +28,7 @@ app.get("/", (c) => {
 
 app.route("/auth", auth);
 app.route("/countries", countries);
+app.route("/esims", esims);
 
 serve({
   fetch: app.fetch,

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import { countryService } from "./services";
 
-import { paramsEntity, paramsSchema } from "./entities/params.entity";
+import { queriesEntity, queriesSchema } from "./entities";
 
 const app = new Hono();
 
@@ -10,13 +10,13 @@ app.get("/", async (c) => {
   try {
     const query = c.req.query();
 
-    const schemasValidation = paramsSchema.partial().pick({
+    const schemasValidation = queriesSchema.partial().pick({
       limit: true,
     });
 
     const validatedQueries = schemasValidation.parse(query);
 
-    const queries: Required<Pick<paramsEntity, "limit">> = {
+    const queries: Required<Pick<queriesEntity, "limit">> = {
       limit: validatedQueries.limit ?? 9,
     };
 
