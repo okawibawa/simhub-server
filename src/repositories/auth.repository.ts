@@ -1,10 +1,8 @@
-import * as pg from "pg";
-
 import { authDbRepository } from "../db/repositories";
 
 import { authSignInEntity, authSignUpEntity } from "../entities";
 
-import { DatabaseError as CustomDatabaseError, isPgDatabaseError } from "../errors";
+import { DatabaseError, isPgDatabaseError } from "../errors";
 
 const auth = () => {
   const createUser = async ({
@@ -19,10 +17,10 @@ const auth = () => {
     } catch (error: unknown) {
       if (isPgDatabaseError(error)) {
         if (error.constraint === "users_email_unique") {
-          throw CustomDatabaseError(`Email is already taken.`, 400);
+          throw DatabaseError(`Email is already taken.`, 400);
         }
 
-        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+        throw DatabaseError(`Database error: ${error.message}`, 500);
       }
 
       throw error;
@@ -36,7 +34,7 @@ const auth = () => {
       return user[0];
     } catch (error) {
       if (isPgDatabaseError(error)) {
-        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+        throw DatabaseError(`Database error: ${error.message}`, 500);
       }
 
       throw error;
@@ -50,7 +48,7 @@ const auth = () => {
       return user[0];
     } catch (error: unknown) {
       if (isPgDatabaseError(error)) {
-        throw CustomDatabaseError(`Database error: ${error.message}`, 500);
+        throw DatabaseError(`Database error: ${error.message}`, 500);
       }
 
       throw error;

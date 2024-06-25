@@ -7,7 +7,7 @@ import { environment } from "./config";
 import { errorHandler } from "./middlewares";
 
 import auth from "./auth";
-import { isDatabaseError } from "./errors";
+import countries from "./countries";
 
 const app = new Hono();
 const port = environment.port || 8000;
@@ -26,6 +26,7 @@ app.get("/", (c) => {
 });
 
 app.route("/auth", auth);
+app.route("/countries", countries);
 
 serve({
   fetch: app.fetch,
