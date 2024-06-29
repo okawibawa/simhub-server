@@ -17,7 +17,7 @@ app.get("/", async (c) => {
     const validatedQueries = schemasValidation.parse(query);
 
     const queries: Required<Pick<queriesEntity, "limit">> = {
-      limit: validatedQueries.limit ?? 9,
+      limit: validatedQueries.limit ?? 12,
     };
 
     const countries = await countryService.getCountries(queries);

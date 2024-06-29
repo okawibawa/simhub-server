@@ -32,12 +32,15 @@ const seed = async () => {
     await db.insert(schema.countriesSchema).values([
       { code: "JP", name: "Japan" },
       { code: "US", name: "United States" },
+      { code: "AP_13", name: "13 Asian Countries" },
+      { code: "US_CA", name: "United States/Canada" },
     ]);
     await db.insert(schema.esimsSchema).values([
       {
         id: 1,
         countryCode: "JP",
         dataUnit: "gb",
+        dataAmount: 8,
         durationInDays: 8,
         plan: "unlimited",
         priceInUsd: "8",
@@ -47,6 +50,7 @@ const seed = async () => {
         id: 2,
         countryCode: "JP",
         dataUnit: "gb",
+        dataAmount: 8,
         durationInDays: 10,
         plan: "quota",
         priceInUsd: "10",
@@ -56,6 +60,7 @@ const seed = async () => {
         id: 3,
         countryCode: "US",
         dataUnit: "gb",
+        dataAmount: 8,
         durationInDays: 12,
         plan: "unlimited",
         priceInUsd: "12",
