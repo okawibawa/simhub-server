@@ -1,6 +1,6 @@
 import { esimRepository } from "../repositories";
 
-import { esimPlansParamsEntity } from "../entities";
+import { esimPlanDetailsParamsEntity, esimPlansParamsEntity } from "../entities";
 
 const esim = () => {
   const getEsimPlans = async (countryCode: esimPlansParamsEntity) => {
@@ -11,7 +11,15 @@ const esim = () => {
     }
   };
 
-  return { getEsimPlans };
+  const getEsimPlansById = async (id: esimPlanDetailsParamsEntity) => {
+    try {
+      return await esimRepository.getEsimPlansById(id);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return { getEsimPlans, getEsimPlansById };
 };
 
 export const esimService = esim();
