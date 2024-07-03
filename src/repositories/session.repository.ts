@@ -5,9 +5,15 @@ import { sessionEntity, authSignOutEntity } from "../entities";
 import { DatabaseError, isPgDatabaseError } from "../errors";
 
 const session = () => {
-  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: sessionEntity) => {
+  const storeSession = async ({
+    sessionId,
+    token,
+    userId,
+    expiresAt,
+    isRevoked,
+  }: sessionEntity) => {
     try {
-      await sessionDbRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
+      await sessionDbRepository.storeSession({ sessionId, token, userId, expiresAt, isRevoked });
     } catch (error) {
       if (isPgDatabaseError(error)) {
         throw DatabaseError(`Database error: ${error.message}`, 500);

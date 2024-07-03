@@ -10,6 +10,9 @@ import { formatZodErrors } from "./utils";
 
 const app = new Hono();
 
+// TODO: add session middleware
+// TODO: add service to check session
+
 app.post(
   "/sign-up",
   zValidator("form", authSignUpDto, (result, c) => {
@@ -27,8 +30,8 @@ app.post(
         password: validatedBody.password,
       });
 
-      setCookie(c, "session_token", userJwt, {
-        httpOnly: true,
+      setCookie(c, "usid", userJwt, {
+        httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 24 * 60 * 60,
@@ -61,8 +64,8 @@ app.post(
         password: validatedBody.password,
       });
 
-      setCookie(c, "session_token", userJwt, {
-        httpOnly: true,
+      setCookie(c, "usid", userJwt, {
+        httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 24 * 60 * 60,
@@ -71,6 +74,7 @@ app.post(
         domain: process.env.NODE_ENV === "production" ? "simhub.okawibawa.dev" : "",
       });
 
+      // TODO: return user data
       return c.json({ ok: true, message: "User successfully logged in!" }, 200);
     } catch (error: unknown) {
       throw error;
@@ -91,7 +95,7 @@ app.post(
     try {
       await authService.signOut({ id: validatedBody.id });
 
-      deleteCookie(c, "session_token");
+      deleteCookie(c, "usid");
 
       return c.json({ ok: true, message: "User successfully logged out!" }, 200);
     } catch (error) {

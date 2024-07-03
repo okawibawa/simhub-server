@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { v4 } from "uuid";
 
 import { environment } from "../config";
 
@@ -6,6 +7,10 @@ interface jwtData {
   userId?: number;
   userEmail: string;
 }
+
+export const generateSesionId = () => {
+  return v4();
+};
 
 export const generateJwt = ({ userId, userEmail }: jwtData) => {
   return jwt.sign({ userId, userEmail }, environment.jwtSecret, { expiresIn: "1h" });

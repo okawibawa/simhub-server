@@ -74,6 +74,7 @@ export const orderItemsSchema = pgTable("order_items", {
 
 export const sessionSchema = pgTable("session", {
   sessionId: varchar("session_id").primaryKey().unique().notNull(),
+  token: varchar("token").unique(),
   userId: integer("user_id")
     .references(() => usersSchema.id, { onDelete: "cascade" })
     .notNull(),

@@ -4,9 +4,15 @@ import { sessionEntity, authSignOutEntity } from "../entities";
 import { isDatabaseError } from "../errors";
 
 const session = () => {
-  const storeSession = async ({ sessionId, userId, expiresAt, isRevoked }: sessionEntity) => {
+  const storeSession = async ({
+    sessionId,
+    token,
+    userId,
+    expiresAt,
+    isRevoked,
+  }: sessionEntity) => {
     try {
-      await sessionRepository.storeSession({ sessionId, userId, expiresAt, isRevoked });
+      await sessionRepository.storeSession({ sessionId, token, userId, expiresAt, isRevoked });
     } catch (error: unknown) {
       throw error;
     }

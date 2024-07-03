@@ -4,7 +4,7 @@ import { authSignInEntity, authSignUpEntity, authSignOutEntity } from "../entiti
 
 import { authRepository } from "../repositories";
 
-import { generateJwt } from "../utils";
+import { generateJwt, generateSesionId } from "../utils";
 
 import { sessionService } from "./";
 
@@ -19,15 +19,17 @@ const auth = () => {
       const user = await authRepository.createUser({ email, username, password: hashedPassword });
 
       const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
+      const sessionId = generateSesionId();
 
       await sessionService.storeSession({
-        sessionId: jwtToken,
+        sessionId: sessionId,
+        token: jwtToken,
         userId: user.id!,
         expiresAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         isRevoked: false,
       });
 
-      return jwtToken;
+      return sessionId;
     } catch (error: unknown) {
       throw error;
     }
@@ -54,15 +56,17 @@ const auth = () => {
       }
 
       const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
+      const sessionId = generateSesionId();
 
       await sessionService.storeSession({
-        sessionId: jwtToken,
+        sessionId: sessionId,
+        token: jwtToken,
         userId: user.id!,
         expiresAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         isRevoked: false,
       });
 
-      return jwtToken;
+      return sessionId;
     } catch (error) {
       throw error;
     }
