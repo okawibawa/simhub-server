@@ -29,7 +29,7 @@ const auth = () => {
         isRevoked: false,
       });
 
-      return sessionId;
+      return { user, sessionId };
     } catch (error: unknown) {
       throw error;
     }
@@ -66,7 +66,7 @@ const auth = () => {
         isRevoked: false,
       });
 
-      return sessionId;
+      return { user, sessionId };
     } catch (error) {
       throw error;
     }

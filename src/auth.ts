@@ -4,7 +4,7 @@ import { deleteCookie, setCookie } from "hono/cookie";
 
 import { authSignInDto, authSignOutDto, authSignUpDto } from "./entities";
 
-import { authService } from "./services";
+import { authService, sessionService } from "./services";
 
 import { formatZodErrors } from "./utils";
 
@@ -24,13 +24,13 @@ app.post(
     const validatedBody = c.req.valid("form");
 
     try {
-      const userJwt = await authService.signUp({
+      const { user, sessionId } = await authService.signUp({
         email: validatedBody.email,
         username: validatedBody.username,
         password: validatedBody.password,
       });
 
-      setCookie(c, "usid", userJwt, {
+      setCookie(c, "usid", sessionId, {
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -40,7 +40,7 @@ app.post(
         domain: process.env.NODE_ENV === "production" ? "simhub.okawibawa.dev" : "",
       });
 
-      return c.json({ ok: true, message: "User successfully created!" }, 201);
+      return c.json({ ok: true, message: "User successfully created!", data: user }, 201);
     } catch (error: unknown) {
       throw error;
     }
@@ -59,12 +59,12 @@ app.post(
     const validatedBody = c.req.valid("form");
 
     try {
-      const userJwt = await authService.signIn({
+      const { user, sessionId } = await authService.signIn({
         email: validatedBody.email,
         password: validatedBody.password,
       });
 
-      setCookie(c, "usid", userJwt, {
+      setCookie(c, "usid", sessionId, {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -75,7 +75,7 @@ app.post(
       });
 
       // TODO: return user data
-      return c.json({ ok: true, message: "User successfully logged in!" }, 200);
+      return c.json({ ok: true, message: "User successfully logged in!", data: user }, 200);
     } catch (error: unknown) {
       throw error;
     }
