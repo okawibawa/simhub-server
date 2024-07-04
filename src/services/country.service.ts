@@ -1,8 +1,8 @@
-import { queriesEntity } from "../entities";
+import { countriesSearchEntity, queriesEntity } from "../entities";
 import { countryRepository } from "../repositories";
 
 const country = () => {
-  const getCountries = async (queries: Pick<queriesEntity, "limit">) => {
+  const getCountries = async (queries: queriesEntity) => {
     try {
       const countries = await countryRepository.getCountries(queries);
 
@@ -12,7 +12,17 @@ const country = () => {
     }
   };
 
-  return { getCountries };
+  const getCountriesBySearch = async (countryName: countriesSearchEntity) => {
+    try {
+      const countries = await countryRepository.getCountriesBySearch(countryName);
+
+      return countries;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return { getCountries, getCountriesBySearch };
 };
 
 export const countryService = country();

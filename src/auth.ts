@@ -74,7 +74,6 @@ app.post(
         domain: process.env.NODE_ENV === "production" ? "simhub.okawibawa.dev" : "",
       });
 
-      // TODO: return user data
       return c.json({ ok: true, message: "User successfully logged in!", data: user }, 200);
     } catch (error: unknown) {
       throw error;

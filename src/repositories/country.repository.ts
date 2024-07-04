@@ -1,5 +1,5 @@
 import { countryDbRepository } from "../db/repositories";
-import { queriesEntity } from "../entities";
+import { countriesSearchEntity, queriesEntity } from "../entities";
 
 import { isPgDatabaseError, DatabaseError } from "../errors";
 
@@ -18,7 +18,21 @@ const country = () => {
     }
   };
 
-  return { getCountries };
+  const getCountriesBySearch = async (countryName: countriesSearchEntity) => {
+    try {
+      const countries = await countryDbRepository.getCountriesBySearch(countryName);
+
+      return countries;
+    } catch (error) {
+      if (isPgDatabaseError(error)) {
+        throw DatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw error;
+    }
+  };
+
+  return { getCountries, getCountriesBySearch };
 };
 
 export const countryRepository = country();

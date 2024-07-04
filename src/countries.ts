@@ -1,8 +1,9 @@
 import { Hono } from "hono";
+import { zValidator } from "@hono/zod-validator";
 
 import { countryService } from "./services";
 
-import { queriesEntity, queriesSchema } from "./entities";
+import { countriesSearchSchema, queriesEntity, queriesSchema } from "./entities";
 
 const app = new Hono();
 
@@ -27,5 +28,25 @@ app.get("/", async (c) => {
     throw error;
   }
 });
+
+app.post(
+  "/search",
+  zValidator("form", countriesSearchSchema, (result, c) => {
+    if (!result.success) {
+      return c.json({ ok: false, message: result.error.errors }, 400);
+    }
+  }),
+  async (c) => {
+    try {
+      const countryName = c.req.valid("form");
+
+      const countries = await countryService.getCountriesBySearch(countryName);
+
+      return c.json({ ok: true, message: "Data successfully fetched!", data: countries.rows });
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 export default app;
