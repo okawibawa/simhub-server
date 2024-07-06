@@ -1,11 +1,12 @@
 import { esimDbRepository } from "../db/repositories";
 
-import { esimPlanDetailsParamsEntity, esimPlansParamsEntity } from "../entities";
-
 import { DatabaseError, isPgDatabaseError } from "../errors";
 
+import { countryCodeParamsData } from "../cores/validation";
+import { idData } from "../cores/common";
+
 const esim = () => {
-  const getEsimPlans = async (countryCode: esimPlansParamsEntity) => {
+  const getEsimPlans = async (countryCode: countryCodeParamsData) => {
     try {
       const esimPlans = await esimDbRepository.getEsims(countryCode);
 
@@ -19,7 +20,7 @@ const esim = () => {
     }
   };
 
-  const getEsimPlansById = async (id: esimPlanDetailsParamsEntity) => {
+  const getEsimPlansById = async (id: idData) => {
     try {
       const esimPlans = await esimDbRepository.getEsimsById(id);
 

@@ -2,9 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { deleteCookie, setCookie } from "hono/cookie";
 
-import { authSignInDto, authSignOutDto, authSignUpDto } from "./entities";
+import { authService } from "./services";
 
-import { authService, sessionService } from "./services";
+import { idSchema } from "./cores/common";
+import { authSignInSchema, authSignUpSchema } from "./cores";
 
 import { formatZodErrors } from "./utils";
 
@@ -15,9 +16,10 @@ const app = new Hono();
 
 app.post(
   "/sign-up",
-  zValidator("form", authSignUpDto, (result, c) => {
+  zValidator("form", authSignUpSchema, (result, c) => {
     if (!result.success) {
-      return c.json({ ok: false, message: result.error.errors }, 400);
+      const formattedErrors = formatZodErrors(result.error.issues);
+      return c.json({ ok: false, message: formattedErrors }, 400);
     }
   }),
   async (c) => {
@@ -49,7 +51,9 @@ app.post(
 
 app.post(
   "/sign-in",
-  zValidator("form", authSignInDto, (result, c) => {
+  zValidator("form", authSignInSchema, (result, c) => {
+    console.log({ result });
+
     if (!result.success) {
       const formattedErrors = formatZodErrors(result.error.issues);
       return c.json({ ok: false, message: formattedErrors }, 400);
@@ -83,9 +87,10 @@ app.post(
 
 app.post(
   "/sign-out",
-  zValidator("form", authSignOutDto, (result, c) => {
+  zValidator("form", idSchema, (result, c) => {
     if (!result.success) {
-      return c.json({ ok: false, message: result.error.errors }, 400);
+      const formattedErrors = formatZodErrors(result.error.issues);
+      return c.json({ ok: false, message: formattedErrors }, 400);
     }
   }),
   async (c) => {

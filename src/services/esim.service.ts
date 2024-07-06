@@ -1,9 +1,8 @@
+import { countryCodeParamsData } from "../cores/validation";
 import { esimRepository } from "../repositories";
 
-import { esimPlanDetailsParamsEntity, esimPlansParamsEntity } from "../entities";
-
 const esim = () => {
-  const getEsimPlans = async (countryCode: esimPlansParamsEntity) => {
+  const getEsimPlans = async (countryCode: countryCodeParamsData) => {
     try {
       return await esimRepository.getEsimPlans(countryCode);
     } catch (error) {
@@ -11,9 +10,9 @@ const esim = () => {
     }
   };
 
-  const getEsimPlansById = async (id: esimPlanDetailsParamsEntity) => {
+  const getEsimPlansById = async (id: number) => {
     try {
-      return await esimRepository.getEsimPlansById(id);
+      return await esimRepository.getEsimPlansById({ id });
     } catch (error) {
       throw error;
     }

@@ -1,17 +1,12 @@
 import { sessionDbRepository } from "../db/repositories";
 
-import { sessionEntity, authSignOutEntity } from "../entities";
-
 import { DatabaseError, isPgDatabaseError } from "../errors";
 
+import { sessionData } from "../cores";
+import { idData } from "../cores/common";
+
 const session = () => {
-  const storeSession = async ({
-    sessionId,
-    token,
-    userId,
-    expiresAt,
-    isRevoked,
-  }: sessionEntity) => {
+  const storeSession = async ({ sessionId, token, userId, expiresAt, isRevoked }: sessionData) => {
     try {
       await sessionDbRepository.storeSession({ sessionId, token, userId, expiresAt, isRevoked });
     } catch (error) {
@@ -23,7 +18,7 @@ const session = () => {
     }
   };
 
-  const getSession = async ({ id }: authSignOutEntity): Promise<sessionEntity> => {
+  const getSession = async ({ id }: idData): Promise<sessionData> => {
     try {
       const userSession = await sessionDbRepository.getSession({ id });
 
@@ -37,7 +32,7 @@ const session = () => {
     }
   };
 
-  const revokeSession = async ({ id }: authSignOutEntity) => {
+  const revokeSession = async ({ id }: idData) => {
     try {
       await sessionDbRepository.updateSession({ id });
     } catch (error) {

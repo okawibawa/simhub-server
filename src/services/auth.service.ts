@@ -1,17 +1,19 @@
 import { hash, compare } from "bcrypt";
 
-import { authSignInEntity, authSignUpEntity, authSignOutEntity } from "../entities";
-
 import { authRepository } from "../repositories";
 
 import { generateJwt, generateSesionId } from "../utils";
 
 import { sessionService } from "./";
 
-import { BadRequestError, NotFoundError, isDatabaseError, isPgDatabaseError } from "../errors";
+import { BadRequestError, NotFoundError } from "../errors";
+
+import { idData } from "../cores/common";
+
+import { authSignInData, authSignUpData } from "../cores";
 
 const auth = () => {
-  const signUp = async ({ email, username, password }: authSignUpEntity) => {
+  const signUp = async ({ email, username, password }: authSignUpData) => {
     try {
       const saltRounds = 10;
       const hashedPassword = await hash(password, saltRounds);
@@ -35,7 +37,7 @@ const auth = () => {
     }
   };
 
-  const signIn = async ({ email, password }: authSignInEntity) => {
+  const signIn = async ({ email, password }: authSignInData) => {
     try {
       const user = await authRepository.getUser({ email });
 
@@ -72,7 +74,7 @@ const auth = () => {
     }
   };
 
-  const signOut = async ({ id }: authSignOutEntity) => {
+  const signOut = async ({ id }: idData) => {
     try {
       const user = await authRepository.getUserById({ id });
 

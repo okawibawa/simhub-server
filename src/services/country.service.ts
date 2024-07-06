@@ -1,10 +1,11 @@
-import { countriesSearchEntity, queriesEntity } from "../entities";
 import { countryRepository } from "../repositories";
 
+import { countryNameSearchParamsData } from "../cores/validation/country.schema";
+
 const country = () => {
-  const getCountries = async (queries: queriesEntity) => {
+  const getCountries = async () => {
     try {
-      const countries = await countryRepository.getCountries(queries);
+      const countries = await countryRepository.getCountries();
 
       return countries;
     } catch (error) {
@@ -12,9 +13,9 @@ const country = () => {
     }
   };
 
-  const getCountriesBySearch = async (countryName: countriesSearchEntity) => {
+  const getCountriesBySearch = async (countryName: countryNameSearchParamsData) => {
     try {
-      const countries = await countryRepository.getCountriesBySearch(countryName);
+      const countries = await countryRepository.getCountriesBySearch({ name: countryName.name });
 
       return countries;
     } catch (error) {

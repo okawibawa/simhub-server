@@ -3,25 +3,13 @@ import { zValidator } from "@hono/zod-validator";
 
 import { countryService } from "./services";
 
-import { countriesSearchSchema, queriesEntity, queriesSchema } from "./entities";
+import { countryNameSearchSchema } from "./cores/validation";
 
 const app = new Hono();
 
 app.get("/", async (c) => {
   try {
-    const query = c.req.query();
-
-    const schemasValidation = queriesSchema.partial().pick({
-      limit: true,
-    });
-
-    const validatedQueries = schemasValidation.parse(query);
-
-    const queries: Required<Pick<queriesEntity, "limit">> = {
-      limit: validatedQueries.limit ?? 12,
-    };
-
-    const countries = await countryService.getCountries(queries);
+    const countries = await countryService.getCountries();
 
     return c.json({ ok: true, message: "Data successfully fetched!", data: countries });
   } catch (error) {
@@ -31,7 +19,7 @@ app.get("/", async (c) => {
 
 app.post(
   "/search",
-  zValidator("form", countriesSearchSchema, (result, c) => {
+  zValidator("form", countryNameSearchSchema, (result, c) => {
     if (!result.success) {
       return c.json({ ok: false, message: result.error.errors }, 400);
     }
@@ -40,7 +28,7 @@ app.post(
     try {
       const countryName = c.req.valid("form");
 
-      const countries = await countryService.getCountriesBySearch(countryName);
+      const countries = await countryService.getCountriesBySearch({ name: countryName.name });
 
       return c.json({ ok: true, message: "Data successfully fetched!", data: countries.rows });
     } catch (error) {

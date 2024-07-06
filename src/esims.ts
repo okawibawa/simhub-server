@@ -3,15 +3,19 @@ import { zValidator } from "@hono/zod-validator";
 
 import { esimService } from "./services";
 
-import { esimPlansParamsSchema, esimPlanDetailsParamsSchema } from "./entities";
+import { idSchema } from "./cores/common";
+import { countryCodeSchema } from "./cores/validation";
+
+import { formatZodErrors } from "./utils";
 
 const app = new Hono();
 
 app.get(
   "/:code",
-  zValidator("param", esimPlansParamsSchema, (result, c) => {
+  zValidator("param", countryCodeSchema, (result, c) => {
     if (!result.success) {
-      return c.json({ ok: false, message: result.error.errors }, 400);
+      const formattedErrors = formatZodErrors(result.error.issues);
+      return c.json({ ok: false, message: formattedErrors }, 400);
     }
   }),
   async (c) => {
@@ -29,14 +33,15 @@ app.get(
 
 app.get(
   "/plan-details/:id",
-  zValidator("param", esimPlanDetailsParamsSchema, (result, c) => {
+  zValidator("param", idSchema, (result, c) => {
     if (!result.success) {
-      return c.json({ ok: false, message: result.error.errors }, 400);
+      const formattedErrors = formatZodErrors(result.error.issues);
+      return c.json({ ok: false, message: formattedErrors }, 400);
     }
   }),
   async (c) => {
     try {
-      const id = c.req.valid("param");
+      const { id } = c.req.valid("param");
 
       const esimPlans = await esimService.getEsimPlansById(id);
 

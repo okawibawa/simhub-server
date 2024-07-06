@@ -4,10 +4,15 @@ import { dbInstance } from "..";
 import { usersSchema } from "../schema";
 
 const user = () => {
-  const getUser = async (id: number) =>
-    await dbInstance.getDbInstance().select().from(usersSchema).where(eq(usersSchema.id, id));
+  const updateUser = async (id: number) =>
+    await dbInstance
+      .getDbInstance()
+      .update(usersSchema)
+      .set({ username: "oooooo" })
+      .where(eq(usersSchema.id, id))
+      .returning();
 
-  return { getUser };
+  return { updateUser };
 };
 
 export const userDbRepository = user();

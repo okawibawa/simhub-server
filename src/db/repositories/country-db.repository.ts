@@ -1,15 +1,16 @@
 import { sql } from "drizzle-orm";
 
-import { countriesSearchEntity, queriesEntity } from "@/src/entities";
 import { dbInstance } from "..";
 
 import { countriesSchema } from "../schema";
 
-const country = () => {
-  const getCountries = async (queries: queriesEntity) =>
-    await dbInstance.getDbInstance().select().from(countriesSchema).limit(queries.limit);
+import { countryNameSearchParamsData } from "@/src/cores/validation";
 
-  const getCountriesBySearch = async (countryName: countriesSearchEntity) =>
+const country = () => {
+  const getCountries = async () =>
+    await dbInstance.getDbInstance().select().from(countriesSchema).limit(12);
+
+  const getCountriesBySearch = async (countryName: countryNameSearchParamsData) =>
     await dbInstance
       .getDbInstance()
       .execute(sql`select * from countries where name ~* ${countryName.name}`);

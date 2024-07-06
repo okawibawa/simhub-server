@@ -1,22 +1,22 @@
 import { eq } from "drizzle-orm";
 
-import { authSignInEntity, authSignUpEntity } from "@/src/entities";
+import { authSignUpData, authSignInData } from "@/src/cores";
 import { dbInstance } from "..";
 
 import { usersSchema } from "../schema";
 
 const authDb = () => {
-  const createUser = async ({ email, username, password }: authSignUpEntity) =>
+  const createUser = async ({ email, username, password }: authSignUpData) =>
     await dbInstance
       .getDbInstance()
       .insert(usersSchema)
       .values({ email, username, password })
       .returning();
 
-  const getUser = async ({ email }: Pick<authSignInEntity, "email">) =>
+  const getUser = async ({ email }: Pick<authSignInData, "email">) =>
     await dbInstance.getDbInstance().select().from(usersSchema).where(eq(usersSchema.email, email));
 
-  const getUserById = async ({ id }: Pick<authSignInEntity, "id">) =>
+  const getUserById = async ({ id }: Pick<authSignUpData, "id">) =>
     await dbInstance.getDbInstance().select().from(usersSchema).where(eq(usersSchema.id, id!));
 
   return {

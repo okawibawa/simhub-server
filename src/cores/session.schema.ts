@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// import { createUpdateSchema } from "./common";
+
 export const sessionSchema = z.object({
   sessionId: z.string().trim(),
   token: z.string().trim().nullable(),
@@ -8,4 +10,4 @@ export const sessionSchema = z.object({
   isRevoked: z.boolean().default(false),
 });
 
-export type sessionEntity = z.infer<typeof sessionSchema>;
+export type sessionData = z.infer<typeof sessionSchema>;

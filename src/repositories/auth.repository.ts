@@ -1,6 +1,6 @@
 import { authDbRepository } from "../db/repositories";
 
-import { authSignInEntity, authSignUpEntity } from "../entities";
+import { authSignUpData, authSignInData } from "../cores";
 
 import { DatabaseError, isPgDatabaseError } from "../errors";
 
@@ -9,7 +9,7 @@ const auth = () => {
     email,
     username,
     password,
-  }: authSignUpEntity): Promise<authSignUpEntity> => {
+  }: authSignUpData): Promise<authSignUpData> => {
     try {
       const user = await authDbRepository.createUser({ email, username, password });
 
@@ -27,7 +27,7 @@ const auth = () => {
     }
   };
 
-  const getUser = async ({ email }: Pick<authSignInEntity, "email">): Promise<authSignInEntity> => {
+  const getUser = async ({ email }: Pick<authSignInData, "email">): Promise<authSignInData> => {
     try {
       const user = await authDbRepository.getUser({ email });
 
@@ -41,7 +41,7 @@ const auth = () => {
     }
   };
 
-  const getUserById = async ({ id }: Pick<authSignUpEntity, "id">): Promise<authSignUpEntity> => {
+  const getUserById = async ({ id }: Pick<authSignUpData, "id">): Promise<authSignUpData> => {
     try {
       const user = await authDbRepository.getUserById({ id });
 

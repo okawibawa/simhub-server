@@ -1,16 +1,11 @@
 import { sessionRepository } from "../repositories";
 
-import { sessionEntity, authSignOutEntity } from "../entities";
+import { sessionData } from "../cores";
 import { isDatabaseError } from "../errors";
+import { idData } from "../cores/common";
 
 const session = () => {
-  const storeSession = async ({
-    sessionId,
-    token,
-    userId,
-    expiresAt,
-    isRevoked,
-  }: sessionEntity) => {
+  const storeSession = async ({ sessionId, token, userId, expiresAt, isRevoked }: sessionData) => {
     try {
       await sessionRepository.storeSession({ sessionId, token, userId, expiresAt, isRevoked });
     } catch (error: unknown) {
@@ -18,7 +13,7 @@ const session = () => {
     }
   };
 
-  const getSession = async ({ id }: authSignOutEntity) => {
+  const getSession = async ({ id }: idData) => {
     try {
       const userSession = await sessionRepository.getSession({ id });
 
@@ -28,7 +23,7 @@ const session = () => {
     }
   };
 
-  const revokeSession = async ({ id }: authSignOutEntity) => {
+  const revokeSession = async ({ id }: idData) => {
     try {
       await sessionRepository.revokeSession({ id });
     } catch (error) {
