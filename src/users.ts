@@ -5,7 +5,7 @@ import { authService } from "./services";
 import { userService } from "./services";
 
 import { idSchema } from "./cores/common";
-import { userUsernameSchema } from "./cores/validation";
+import { userUsernameSchema, userSchema } from "./cores/validation";
 
 const app = new Hono();
 
@@ -16,7 +16,7 @@ app.put(
       return c.json({ ok: false, message: result.error.errors }, 400);
     }
   }),
-  zValidator("form", userUsernameSchema, (result, c) => {
+  zValidator("form", userSchema, (result, c) => {
     if (!result.success) {
       return c.json({ ok: false, message: result.error.errors }, 400);
     }
@@ -24,9 +24,9 @@ app.put(
   async (c) => {
     try {
       const { id } = c.req.valid("param");
-      const { username } = c.req.valid("form");
+      const body = c.req.valid("form");
 
-      const updatedUser = await userService.updateUser(id, username);
+      const updatedUser = await userService.updateUser(id, body);
 
       return c.json({ ok: true, message: "Data successfully updated!", data: updatedUser });
     } catch (error) {

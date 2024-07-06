@@ -2,13 +2,14 @@ import { eq } from "drizzle-orm";
 import { dbInstance } from "..";
 
 import { usersSchema } from "../schema";
+import { userSchemaData } from "@/src/cores/validation";
 
 const user = () => {
-  const updateUser = async (id: number, username: string) =>
+  const updateUser = async (id: number, body: userSchemaData) =>
     await dbInstance
       .getDbInstance()
       .update(usersSchema)
-      .set({ username })
+      .set({ ...body })
       .where(eq(usersSchema.id, id))
       .returning();
 
