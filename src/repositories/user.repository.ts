@@ -1,9 +1,9 @@
 import { userDbRepository } from "../db/repositories";
 
 const user = () => {
-  const updateUser = async (id: number) => {
+  const updateUser = async (id: number, username: string) => {
     try {
-      const user = await userDbRepository.updateUser(id);
+      const user = await userDbRepository.updateUser(id, username);
 
       return user;
     } catch (error) {
