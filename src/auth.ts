@@ -52,8 +52,6 @@ app.post(
 app.post(
   "/sign-in",
   zValidator("form", authSignInSchema, (result, c) => {
-    console.log({ result });
-
     if (!result.success) {
       const formattedErrors = formatZodErrors(result.error.issues);
       return c.json({ ok: false, message: formattedErrors }, 400);
