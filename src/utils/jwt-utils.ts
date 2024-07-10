@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { v4 } from "uuid";
+import * as v4 from "uuid";
 
 import { environment } from "../config";
 
@@ -9,7 +9,7 @@ interface jwtData {
 }
 
 export const generateSesionId = () => {
-  return v4();
+  return v4.v4();
 };
 
 export const generateJwt = ({ userId, userEmail }: jwtData) => {
