@@ -12,7 +12,7 @@ import esims from "./esims";
 import users from "./users";
 
 const app = new Hono();
-const port = environment.port || 8000;
+const port = environment.port || 8001;
 
 app.use(
   cors({
