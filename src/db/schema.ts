@@ -40,6 +40,7 @@ export const esimsSchema = pgTable("esims", {
   type: esimsType("type").notNull(),
   plan: esimsPlan("plan").notNull(),
   dataUnit: esimsDataUnit("data_unit").notNull(),
+  dataAmount: integer("data_amount").notNull(),
   priceInUsd: numeric("price_in_usd", { precision: 10, scale: 2 }).notNull(),
   durationInDays: smallint("duration_in_days").notNull(),
   countryCode: varchar("country_code")
@@ -73,6 +74,7 @@ export const orderItemsSchema = pgTable("order_items", {
 
 export const sessionSchema = pgTable("session", {
   sessionId: varchar("session_id").primaryKey().unique().notNull(),
+  token: varchar("token").unique(),
   userId: integer("user_id")
     .references(() => usersSchema.id, { onDelete: "cascade" })
     .notNull(),

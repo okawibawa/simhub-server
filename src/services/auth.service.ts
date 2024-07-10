@@ -1,17 +1,19 @@
 import { hash, compare } from "bcrypt";
 
-import { authSignInEntity, authSignUpEntity, authSignOutEntity } from "../entities";
-
 import { authRepository } from "../repositories";
 
-import { generateJwt } from "../utils";
+import { generateJwt, generateSesionId } from "../utils";
 
 import { sessionService } from "./";
 
-import { BadRequestError, NotFoundError, isDatabaseError, isPgDatabaseError } from "../errors";
+import { BadRequestError, NotFoundError } from "../errors";
+
+import { idData } from "../cores/common";
+
+import { authSignInData, authSignUpData } from "../cores";
 
 const auth = () => {
-  const signUp = async ({ email, username, password }: authSignUpEntity) => {
+  const signUp = async ({ email, username, password }: authSignUpData) => {
     try {
       const saltRounds = 10;
       const hashedPassword = await hash(password, saltRounds);
@@ -19,21 +21,23 @@ const auth = () => {
       const user = await authRepository.createUser({ email, username, password: hashedPassword });
 
       const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
+      const sessionId = generateSesionId();
 
       await sessionService.storeSession({
-        sessionId: jwtToken,
+        sessionId: sessionId,
+        token: jwtToken,
         userId: user.id!,
         expiresAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         isRevoked: false,
       });
 
-      return jwtToken;
+      return { user, sessionId };
     } catch (error: unknown) {
       throw error;
     }
   };
 
-  const signIn = async ({ email, password }: authSignInEntity) => {
+  const signIn = async ({ email, password }: authSignInData) => {
     try {
       const user = await authRepository.getUser({ email });
 
@@ -54,21 +58,23 @@ const auth = () => {
       }
 
       const jwtToken = generateJwt({ userId: user.id, userEmail: user.email });
+      const sessionId = generateSesionId();
 
       await sessionService.storeSession({
-        sessionId: jwtToken,
+        sessionId: sessionId,
+        token: jwtToken,
         userId: user.id!,
         expiresAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         isRevoked: false,
       });
 
-      return jwtToken;
+      return { user, sessionId };
     } catch (error) {
       throw error;
     }
   };
 
-  const signOut = async ({ id }: authSignOutEntity) => {
+  const signOut = async ({ id }: idData) => {
     try {
       const user = await authRepository.getUserById({ id });
 

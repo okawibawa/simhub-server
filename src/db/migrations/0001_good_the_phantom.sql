@@ -1,0 +1,1 @@
+ALTER TABLE "esims" ADD COLUMN "data_amount" integer NOT NULL;
