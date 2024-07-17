@@ -16,8 +16,9 @@ const port = environment.port || 8001;
 
 app.use(
   cors({
-    origin: ["https://simhub.okawibawa.dev"],
+    origin: ["https://simhub.okawibawa.dev", "localhost"],
     credentials: true,
+    allowHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
 

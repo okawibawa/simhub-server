@@ -6,8 +6,6 @@ export const authMiddleware = createMiddleware(async (c, next) => {
 
   const usid = getCookie(c);
 
-  console.log(usid);
-
   if (!authToken) {
     return c.json({ ok: false, message: "Unauthorized." }, 401);
   }
