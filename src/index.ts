@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 
 import { environment } from "./config";
 
-import { errorHandler } from "./middlewares";
+import { authMiddleware, errorHandler } from "./middlewares";
 
 import auth from "./auth";
 import countries from "./countries";
@@ -20,6 +20,10 @@ app.use(
     credentials: true,
   })
 );
+
+["/users/*"].map((path) => {
+  app.use(path, authMiddleware);
+});
 
 app.onError(errorHandler);
 
