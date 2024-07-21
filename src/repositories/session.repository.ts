@@ -3,7 +3,7 @@ import { sessionDbRepository } from "../db/repositories";
 import { DatabaseError, isPgDatabaseError } from "../errors";
 
 import { sessionData } from "../cores";
-import { idData } from "../cores/common";
+import { idData, sessionIdData } from "../cores/common";
 
 const session = () => {
   const storeSession = async ({ sessionId, token, userId, expiresAt, isRevoked }: sessionData) => {
@@ -18,9 +18,23 @@ const session = () => {
     }
   };
 
-  const getSession = async ({ id }: idData): Promise<sessionData> => {
+  const getSessionBySessionId = async ({ sessionId }: sessionIdData): Promise<sessionData> => {
     try {
-      const userSession = await sessionDbRepository.getSession({ id });
+      const userSession = await sessionDbRepository.getSessionBySessionId({ sessionId });
+
+      return userSession[0];
+    } catch (error) {
+      if (isPgDatabaseError(error)) {
+        throw DatabaseError(`Database error: ${error.message}`, 500);
+      }
+
+      throw error;
+    }
+  };
+
+  const getSessionByUserId = async ({ id }: idData): Promise<sessionData> => {
+    try {
+      const userSession = await sessionDbRepository.getSessionByUserId({ id });
 
       return userSession[0];
     } catch (error) {
@@ -44,7 +58,7 @@ const session = () => {
     }
   };
 
-  return { storeSession, revokeSession, getSession };
+  return { storeSession, revokeSession, getSessionBySessionId, getSessionByUserId };
 };
 
 export const sessionRepository = session();

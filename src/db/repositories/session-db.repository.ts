@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { dbInstance } from "..";
 
 import { sessionSchema, updateTimestamp } from "../schema";
-import { idData } from "@/src/cores/common";
+import { idData, sessionIdData } from "@/src/cores/common";
 import { sessionData } from "@/src/cores";
 
 const session = () => {
@@ -13,7 +13,14 @@ const session = () => {
       .insert(sessionSchema)
       .values({ sessionId, userId, expiresAt, isRevoked });
 
-  const getSession = async ({ id }: idData) =>
+  const getSessionBySessionId = async ({ sessionId }: sessionIdData) =>
+    await dbInstance
+      .getDbInstance()
+      .select()
+      .from(sessionSchema)
+      .where(eq(sessionSchema.sessionId, sessionId));
+
+  const getSessionByUserId = async ({ id }: idData) =>
     await dbInstance
       .getDbInstance()
       .select()
@@ -29,7 +36,8 @@ const session = () => {
 
   return {
     storeSession,
-    getSession,
+    getSessionBySessionId,
+    getSessionByUserId,
     updateSession,
   };
 };

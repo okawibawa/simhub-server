@@ -51,7 +51,7 @@ const auth = () => {
         throw BadRequestError("Password incorrect. Please double check your password.", 400);
       }
 
-      const userSession = await sessionService.getSession({ id: user.id! });
+      const userSession = await sessionService.getSessionByUserId({ id: user.id! });
 
       if (userSession) {
         await sessionService.revokeSession({ id: user.id! });
